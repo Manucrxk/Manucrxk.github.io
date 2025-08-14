@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contador de Amor</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: black;
+        overflow: hidden;
+        font-family: 'Orbitron', sans-serif;
+    }
+    canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 0;
+    }
+
+    /* Pantallas */
+    .pantalla {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        opacity: 1;
+        transition: opacity 1s ease;
+        z-index: 1;
+    }
+    .oculta {
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    /* Texto inicial */
+    .texto-inicial {
+        color: white;
+        margin-bottom: 20px;
+        font-size: 1em;
+        max-width: 90%;
+        text-align: center;
+        overflow-y: auto;
+        height: 60vh;
+        line-height: 1.4em;
+    }
+
+    /* Botón grande */
+    button.grande {
+        font-size: 2em;
+        padding: 10px 30px;
+        border: none;
+        border-radius: 8px;
+        background: #00eaff;
+        color: black;
+        font-weight: bold;
+        cursor: pointer;
+        text-shadow: 0 0 5px white;
+        box-shadow: 0 0 15px #00eaff;
+        transition: transform 0.2s;
+        margin-top: 15px;
+    }
+    button.grande:hover {
+        transform: scale(1.1);
+    }
+
+    /* Botón pequeño circular de audio */
+    button.pequeno {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: none;
+        background: #00eaff;
+        color: black;
+        font-size: 1.5em;
+        cursor: pointer;
+        text-shadow: 0 0 3px white;
+        box-shadow: 0 0 10px #00eaff;
+        margin-top: 15px;
+        transition: transform 0.2s;
+    }
+    button.pequeno:hover {
+        transform: scale(1.2);
+    }
+
+    /* Contador */
+    .titulo-contador {
+        font-size: 1em;
+        color: #00eaff;
+        text-shadow: 0 0 10px #00eaff, 0 0 20px #00eaff;
+        margin-bottom: 15px;
+    }
+    #contador {
+        display: flex;
+        gap: 10px;
+        font-size: 1.5em;
+        color: #00eaff;
+        text-shadow: 0 0 10px #00eaff, 0 0 20px #00eaff, 0 0 40px #00eaff;
+    }
+    .unidad {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .numero {
+        font-size: 1em;
+    }
+    .label {
+        font-size: 0.6em;
+        color: white;
+        text-shadow: 0 0 5px #00eaff;
+    }
+
+    /* Frase debajo del contador */
+    .frase-contador {
+        margin-top: 20px;
+        color: #ffffff;
+        font-size: 1em;
+        text-align: center;
+        text-shadow: 0 0 8px #00eaff;
+        opacity: 0;
+        transition: opacity 2s ease;
+    }
+    .frase-contador.mostrar {
+        opacity: 1;
+    }
+</style>
+</head>
+<body>
+
+<canvas id="fondo"></canvas>
+
+<!-- Pantalla inicial -->
+<div id="pantallaInicio" class="pantalla">
+    <div class="texto-inicial" id="textoInicial"></div>
+    <button id="btnIniciar" class="grande">¿⌛️🤍?</button>
+</div>
+
+<!-- Pantalla contador -->
+<div id="pantallaContador" class="pantalla oculta">
+    <div class="titulo-contador">Nuestro tiempo juntos:</div>
+    <div id="contador">
+        <div class="unidad">
+            <div class="numero" id="dias">00</div>
+            <div class="label">DÍAS</div>
+        </div>
+        <div class="unidad">
+            <div class="numero" id="horas">00</div>
+            <div class="label">HORAS</div>
+        </div>
+        <div class="unidad">
+            <div class="numero" id="minutos">00</div>
+            <div class="label">MINUTOS</div>
+        </div>
+        <div class="unidad">
+            <div class="numero" id="segundos">00</div>
+            <div class="label">SEGUNDOS</div>
+        </div>
+    </div>
+
+    <!-- Frase debajo del contador -->
+    <div class="frase-contador" id="fraseContador">
+        Espero que este contador siga avanzando y nosotros estemos juntos por esta y 1000 vidas más, mi princesita hermosa. 🤍
+    </div>
+    
+    <!-- Botón pequeño circular de audio -->
+    <button id="btnAudio" class="pequeno">▶️</button>
+</div>
+
+<script>
+    // Fondo estrellado
+    const canvas = document.getElementById('fondo');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let estrellas = [];
+    for(let i=0; i<150; i++){
+        estrellas.push({
+            x: Math.random()*canvas.width,
+            y: Math.random()*canvas.height,
+            r: Math.random()*2
+        });
+    }
+    function animarEstrellas(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.fillStyle = 'white';
+        estrellas.forEach(e=>{
+            ctx.beginPath();
+            ctx.arc(e.x,e.y,e.r,0,Math.PI*2);
+            ctx.fill();
+        });
+        requestAnimationFrame(animarEstrellas);
+    }
+    animarEstrellas();
+
+    // Texto romántico efecto máquina de escribir
+    const textoCompleto = `Hola, mi amor: 
+
+El día de hoy cumplimos 1 año con 1 mesesito, sinceramente lo mejor de mi vida. Eres una niña súper increíble, y perdón si suena repetitivo, es que realmente tuve tanta suerte al poder coincidir contigo. Me encantas de pies a cabeza, de todas las maneras posibles. No sabes lo mucho que te amo, lo mucho que me gustas; eres la mujer de mis sueños. Quisiera poder estar contigo cada momento de mi vida, y si me lo permites, así será en un futuro.
+
+Quiero ser el mejor novio, también el mejor esposo y el mejor papá. Quiero tener la vida que siempre soñé, pero quiero que sea con la mujer que siempre soñé: quiero que sea contigo. Gracias por permitirme estar contigo, gracias por intentar ser mejor cada día, gracias por darme los mejores momentos de mi vida, gracias por todo eso, mi niña. Sé que, a pesar de todo lo que pasamos, jamás dejamos de amarnos ni un segundo, y mi amor por ti solo crece.
+
+Espero me permitas formar parte de tu vida (todo lo que resta de ella) y también espero me dejes formar parte de las demás (por toda la eternidad). No sabes lo afortunado que soy al saber que tú eres mi novia, porque eres la niña perfecta. No sabes lo muuucho que tú me gustas. Me encanta todo de ti, en especial esos ojitos tan hermosos; jamás encontraré unos ojitos así, que cuando los vea me hagan sentir tanto.
+
+Te amo, mi niña. De nuevo, Feliz añito y 1 mes, mi niña 🤍`;
+    const textoInicial = document.getElementById('textoInicial');
+    let index = 0;
+    function escribirTexto(){
+        if(index < textoCompleto.length){
+            textoInicial.textContent += textoCompleto.charAt(index);
+            index++;
+            setTimeout(escribirTexto, 20);
+        }
+    }
+    escribirTexto();
+
+    // Audio
+    const audio = new Audio('Audio/dream-girl.mp3');
+    audio.loop = true;
+
+    // Pantallas
+    const btnIniciar = document.getElementById('btnIniciar');
+    const pantallaInicio = document.getElementById('pantallaInicio');
+    const pantallaContador = document.getElementById('pantallaContador');
+    const fraseContador = document.getElementById('fraseContador');
+    const btnAudio = document.getElementById('btnAudio');
+
+    btnIniciar.addEventListener('click', () => {
+        pantallaInicio.classList.add('oculta');
+        setTimeout(() => {
+            pantallaInicio.style.display = 'none';
+            pantallaContador.classList.remove('oculta');
+            setTimeout(() => {
+                fraseContador.classList.add('mostrar');
+            }, 500);
+        }, 1000);
+    });
+        // Botón de audio: alterna play/pause
+    btnAudio.addEventListener('click', () => {
+        if(audio.paused){
+            audio.play();
+            btnAudio.textContent = '⏸️';
+        } else {
+            audio.pause();
+            btnAudio.textContent = '▶️';
+        }
+    });
+
+    // Pausar música si la pestaña pierde foco
+    window.addEventListener('blur', () => {
+        if(!audio.paused){
+            audio.pause();
+            btnAudio.textContent = '▶️';
+        }
+    });
+
+    // Contador
+    const inicioRelacion = new Date('2024-06-26T00:00:00');
+
+    function actualizarContador(){
+        const ahora = new Date();
+        const diff = ahora - inicioRelacion;
+
+        const dias = Math.floor(diff / (1000*60*60*24));
+        let restante = diff - dias*24*60*60*1000;
+        const horas = Math.floor(restante / (1000*60*60));
+        restante -= horas*60*60*1000;
+        const minutos = Math.floor(restante / (1000*60));
+        restante -= minutos*60*1000;
+        const segundos = Math.floor(restante / 1000);
+
+        document.getElementById('dias').textContent = String(dias).padStart(2, '0');
+        document.getElementById('horas').textContent = String(horas).padStart(2, '0');
+        document.getElementById('minutos').textContent = String(minutos).padStart(2, '0');
+        document.getElementById('segundos').textContent = String(segundos).padStart(2, '0');
+    }
+
+    setInterval(actualizarContador, 1000);
+    actualizarContador();
+</script>
+
+</body>
+</html>
+            
