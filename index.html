@@ -24,7 +24,6 @@
         z-index: 0;
     }
 
-    /* Pantallas */
     .pantalla {
         position: absolute;
         display: flex;
@@ -42,22 +41,18 @@
         pointer-events: none;
     }
 
-    /* Texto inicial */
     .texto-inicial {
         color: white;
+        font-size: 1.2em;
         margin-bottom: 20px;
-        font-size: 1em;
-        max-width: 90%;
         text-align: center;
-        overflow-y: auto;
-        height: 60vh;
-        line-height: 1.4em;
+        padding: 0 20px;
+        text-shadow: 0 0 8px white;
     }
 
-    /* Botón grande */
-    button.grande {
-        font-size: 2em;
-        padding: 10px 30px;
+    button {
+        font-size: 1.5em;
+        padding: 10px 20px;
         border: none;
         border-radius: 8px;
         background: #00eaff;
@@ -69,30 +64,10 @@
         transition: transform 0.2s;
         margin-top: 15px;
     }
-    button.grande:hover {
+    button:hover {
         transform: scale(1.1);
     }
 
-    /* Botón pequeño circular de audio */
-    button.pequeno {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        border: none;
-        background: #00eaff;
-        color: black;
-        font-size: 1.5em;
-        cursor: pointer;
-        text-shadow: 0 0 3px white;
-        box-shadow: 0 0 10px #00eaff;
-        margin-top: 15px;
-        transition: transform 0.2s;
-    }
-    button.pequeno:hover {
-        transform: scale(1.2);
-    }
-
-    /* Contador */
     .titulo-contador {
         font-size: 1em;
         color: #00eaff;
@@ -120,7 +95,6 @@
         text-shadow: 0 0 5px #00eaff;
     }
 
-    /* Frase debajo del contador */
     .frase-contador {
         margin-top: 20px;
         color: #ffffff;
@@ -141,8 +115,14 @@
 
 <!-- Pantalla inicial -->
 <div id="pantallaInicio" class="pantalla">
-    <div class="texto-inicial" id="textoInicial"></div>
-    <button id="btnIniciar" class="grande">¿⌛️🤍?</button>
+    <div class="texto-inicial">
+        Hola, mi amor:<br><br>
+        El día de hoy cumplimos 1 año con 1 mesesito, sinceramente lo mejor de mi vida. Eres una niña súper increíble, y perdón si suena repetitivo, es que realmente tuve tanta suerte al poder coincidir contigo. Me encantas de pies a cabeza, de todas las maneras posibles. No sabes lo mucho que te amo, lo mucho que me gustas; eres la mujer de mis sueños. Quisiera poder estar contigo cada momento de mi vida, y si me lo permites, así será en un futuro.<br><br>
+        Quiero ser el mejor novio, también el mejor esposo y el mejor papá. Quiero tener la vida que siempre soñé, pero quiero que sea contigo. Gracias por permitirme estar contigo, gracias por intentar ser mejor cada día, gracias por darme los mejores momentos de mi vida. Sé que, a pesar de todo lo que pasamos, jamás dejamos de amarnos ni un segundo, y mi amor por ti solo crece.<br><br>
+        Espero me permitas formar parte de tu vida (todo lo que resta de ella) y también espero me dejes formar parte de las demás (por toda la eternidad). No sabes lo afortunado que soy al saber que tú eres mi novia, porque eres la niña perfecta. No sabes lo muuucho que tú me gustas. Me encanta todo de ti, en especial esos ojitos tan hermosos; jamás encontraré unos ojitos así, que cuando los vea me hagan sentir tanto.<br><br>
+        Te amo, mi niña. De nuevo, Feliz añito y 1 mes mi niña 🤍
+    </div>
+    <button id="btnIniciar">¿⌛️🤍?</button>
 </div>
 
 <!-- Pantalla contador -->
@@ -166,14 +146,9 @@
             <div class="label">SEGUNDOS</div>
         </div>
     </div>
-
-    <!-- Frase debajo del contador -->
     <div class="frase-contador" id="fraseContador">
-        Espero que este contador siga avanzando y nosotros estemos juntos por esta y 1000 vidas más, mi princesita hermosa. 🤍
+        Espero que este contador siga avanzando y nosotros estemos juntos por esta vida y 1000 más, mi princesita hermosa. 🤍
     </div>
-    
-    <!-- Botón pequeño circular de audio -->
-    <button id="btnAudio" class="pequeno">▶️</button>
 </div>
 
 <script>
@@ -184,13 +159,14 @@
     canvas.height = window.innerHeight;
 
     let estrellas = [];
-    for(let i=0; i<150; i++){
+    for(let i=0;i<150;i++){
         estrellas.push({
             x: Math.random()*canvas.width,
             y: Math.random()*canvas.height,
             r: Math.random()*2
         });
     }
+
     function animarEstrellas(){
         ctx.clearRect(0,0,canvas.width,canvas.height);
         ctx.fillStyle = 'white';
@@ -203,36 +179,11 @@
     }
     animarEstrellas();
 
-    // Texto romántico efecto máquina de escribir
-    const textoCompleto = `Hola, mi amor: 
-
-El día de hoy cumplimos 1 año con 1 mesesito, sinceramente lo mejor de mi vida. Eres una niña súper increíble, y perdón si suena repetitivo, es que realmente tuve tanta suerte al poder coincidir contigo. Me encantas de pies a cabeza, de todas las maneras posibles. No sabes lo mucho que te amo, lo mucho que me gustas; eres la mujer de mis sueños. Quisiera poder estar contigo cada momento de mi vida, y si me lo permites, así será en un futuro.
-
-Quiero ser el mejor novio, también el mejor esposo y el mejor papá. Quiero tener la vida que siempre soñé, pero quiero que sea con la mujer que siempre soñé: quiero que sea contigo. Gracias por permitirme estar contigo, gracias por intentar ser mejor cada día, gracias por darme los mejores momentos de mi vida, gracias por todo eso, mi niña. Sé que, a pesar de todo lo que pasamos, jamás dejamos de amarnos ni un segundo, y mi amor por ti solo crece.
-
-Espero me permitas formar parte de tu vida (todo lo que resta de ella) y también espero me dejes formar parte de las demás (por toda la eternidad). No sabes lo afortunado que soy al saber que tú eres mi novia, porque eres la niña perfecta. No sabes lo muuucho que tú me gustas. Me encanta todo de ti, en especial esos ojitos tan hermosos; jamás encontraré unos ojitos así, que cuando los vea me hagan sentir tanto.
-
-Te amo, mi niña. De nuevo, Feliz añito y 1 mes, mi niña 🤍`;
-    const textoInicial = document.getElementById('textoInicial');
-    let index = 0;
-    function escribirTexto(){
-        if(index < textoCompleto.length){
-            textoInicial.textContent += textoCompleto.charAt(index);
-            index++;
-            setTimeout(escribirTexto, 20);
-        }
-    }
-    escribirTexto();
-
-    const audio = new Audio('https://www.dropbox.com/scl/fi/7frz0i35qhwb5h5ryms3g/dream-girl.mp3?rlkey=itztoyc133vy7xm0c3igmrlh2&st=mc3xut91&dl=1');
-audio.loop = true; // para que se repita
-
-    // Pantallas
+    // Transición entre pantallas
     const btnIniciar = document.getElementById('btnIniciar');
     const pantallaInicio = document.getElementById('pantallaInicio');
     const pantallaContador = document.getElementById('pantallaContador');
     const fraseContador = document.getElementById('fraseContador');
-    const btnAudio = document.getElementById('btnAudio');
 
     btnIniciar.addEventListener('click', () => {
         pantallaInicio.classList.add('oculta');
@@ -243,24 +194,6 @@ audio.loop = true; // para que se repita
                 fraseContador.classList.add('mostrar');
             }, 500);
         }, 1000);
-    });
-        // Botón de audio: alterna play/pause
-    btnAudio.addEventListener('click', () => {
-        if(audio.paused){
-            audio.play();
-            btnAudio.textContent = '⏸️';
-        } else {
-            audio.pause();
-            btnAudio.textContent = '▶️';
-        }
-    });
-
-    // Pausar música si la pestaña pierde foco
-    window.addEventListener('blur', () => {
-        if(!audio.paused){
-            audio.pause();
-            btnAudio.textContent = '▶️';
-        }
     });
 
     // Contador
@@ -290,4 +223,3 @@ audio.loop = true; // para que se repita
 
 </body>
 </html>
-            
