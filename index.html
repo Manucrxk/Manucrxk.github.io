@@ -23,6 +23,8 @@
         left: 0;
         z-index: 0;
     }
+
+    /* Pantallas */
     .pantalla {
         position: absolute;
         display: flex;
@@ -34,23 +36,26 @@
         opacity: 1;
         transition: opacity 1s ease;
         z-index: 1;
-        padding: 20px;
-        box-sizing: border-box;
     }
     .oculta {
         opacity: 0;
         pointer-events: none;
     }
+
+    /* Texto inicial */
     .texto-inicial {
         color: white;
-        font-size: 1.2em;
-        text-align: center;
-        text-shadow: 0 0 8px white;
-        white-space: pre-wrap;
-        line-height: 1.5em;
         margin-bottom: 20px;
+        font-size: 1em;
+        max-width: 90%;
+        text-align: center;
+        overflow-y: auto;
+        height: 60vh;
+        line-height: 1.4em;
     }
-    button {
+
+    /* Botón grande */
+    button.grande {
         font-size: 2em;
         padding: 10px 30px;
         border: none;
@@ -64,15 +69,30 @@
         transition: transform 0.2s;
         margin-top: 15px;
     }
-    button:hover {
+    button.grande:hover {
         transform: scale(1.1);
     }
-    #btnAudio {
-        font-size: 1.2em;
-        padding: 8px 12px;
+
+    /* Botón pequeño circular de audio */
+    button.pequeno {
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
-        margin-top: 20px;
+        border: none;
+        background: #00eaff;
+        color: black;
+        font-size: 1.5em;
+        cursor: pointer;
+        text-shadow: 0 0 3px white;
+        box-shadow: 0 0 10px #00eaff;
+        margin-top: 15px;
+        transition: transform 0.2s;
     }
+    button.pequeno:hover {
+        transform: scale(1.2);
+    }
+
+    /* Contador */
     .titulo-contador {
         font-size: 1em;
         color: #00eaff;
@@ -91,12 +111,16 @@
         flex-direction: column;
         align-items: center;
     }
-    .numero { font-size: 1em; }
+    .numero {
+        font-size: 1em;
+    }
     .label {
         font-size: 0.6em;
         color: white;
         text-shadow: 0 0 5px #00eaff;
     }
+
+    /* Frase debajo del contador */
     .frase-contador {
         margin-top: 20px;
         color: #ffffff;
@@ -106,7 +130,9 @@
         opacity: 0;
         transition: opacity 2s ease;
     }
-    .frase-contador.mostrar { opacity: 1; }
+    .frase-contador.mostrar {
+        opacity: 1;
+    }
 </style>
 </head>
 <body>
@@ -115,18 +141,8 @@
 
 <!-- Pantalla inicial -->
 <div id="pantallaInicio" class="pantalla">
-    <div class="texto-inicial">
-Hola, mi amor:
-
-El día de hoy cumplimos 1 año con 1 mesesito, sinceramente lo mejor de mi vida. Eres una niña súper increíble, y perdón si suena repetitivo, es que realmente tuve tanta suerte al poder coincidir contigo. Me encantas de pies a cabeza, de todas las maneras posibles. No sabes lo mucho que te amo, lo mucho que me gustas; eres la mujer de mis sueños. Quisiera poder estar contigo cada momento de mi vida, y si me lo permites, así será en un futuro.
-
-Quiero ser el mejor novio, también el mejor esposo y el mejor papá. Quiero tener la vida que siempre soñé, pero quiero que sea con la mujer que siempre soñé: quiero que sea contigo. Gracias por permitirme estar contigo, gracias por intentar ser mejor cada día, gracias por darme los mejores momentos de mi vida, gracias por todo eso, mi niña. Sé que, a pesar de todo lo que pasamos, jamás dejamos de amarnos ni un segundo, y mi amor por ti solo crece.
-
-Espero me permitas formar parte de tu vida (todo lo que resta de ella) y también espero me dejes formar parte de las demás (por toda la eternidad). No sabes lo afortunado que soy al saber que tú eres mi novia, porque eres la niña perfecta. No sabes lo muuucho que tú me gustas. Me encanta todo de ti, en especial esos ojitos tan hermosos; jamás encontraré unos ojitos así, que cuando los vea me hagan sentir tanto.
-
-Te amo, mi niña. De nuevo, Feliz añito y 1 mes mi niña 🤍
-    </div>
-    <button id="btnIniciar">¿⌛️🤍?</button>
+    <div class="texto-inicial" id="textoInicial"></div>
+    <button id="btnIniciar" class="grande">¿⌛️🤍?</button>
 </div>
 
 <!-- Pantalla contador -->
@@ -150,33 +166,68 @@ Te amo, mi niña. De nuevo, Feliz añito y 1 mes mi niña 🤍
             <div class="label">SEGUNDOS</div>
         </div>
     </div>
+
+    <!-- Frase debajo del contador -->
     <div class="frase-contador" id="fraseContador">
-        Espero que este contador siga avanzando y nosotros estemos juntos por esta vida y 1000 más, mi princesita hermosa. 🤍
+        Espero que este contador siga avanzando y nosotros estemos juntos por esta vida y 1000 más, mi niña. 🤍
     </div>
-    <button id="btnAudio">▶️</button>
+    
+    <!-- Botón pequeño circular de audio -->
+    <button id="btnAudio" class="pequeno">▶️</button>
 </div>
 
 <script>
+    // Fondo estrellado
     const canvas = document.getElementById('fondo');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
     let estrellas = [];
-    for(let i=0;i<150;i++){
-        estrellas.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*2});
+    for(let i=0; i<150; i++){
+        estrellas.push({
+            x: Math.random()*canvas.width,
+            y: Math.random()*canvas.height,
+            r: Math.random()*2
+        });
     }
     function animarEstrellas(){
         ctx.clearRect(0,0,canvas.width,canvas.height);
         ctx.fillStyle = 'white';
-        estrellas.forEach(e=>{ctx.beginPath(); ctx.arc(e.x,e.y,e.r,0,Math.PI*2); ctx.fill();});
+        estrellas.forEach(e=>{
+            ctx.beginPath();
+            ctx.arc(e.x,e.y,e.r,0,Math.PI*2);
+            ctx.fill();
+        });
         requestAnimationFrame(animarEstrellas);
     }
     animarEstrellas();
 
+    // Texto romántico efecto máquina de escribir
+    const textoCompleto = `Hola, mi amor: 
+
+El día de hoy cumplimos 1 año con 1 mesesito, sinceramente lo mejor de mi vida. Eres una niña súper increíble, y perdón si suena repetitivo, es que realmente tuve tanta suerte al poder coincidir contigo. Me encantas de pies a cabeza, de todas las maneras posibles. No sabes lo mucho que te amo, lo mucho que me gustas; eres la mujer de mis sueños. Quisiera poder estar contigo cada momento de mi vida, y si me lo permites, así será en un futuro.
+
+Quiero ser el mejor novio, también el mejor esposo y el mejor papá. Quiero tener la vida que siempre soñé, pero quiero que sea con la mujer que siempre soñé: quiero que sea contigo. Gracias por permitirme estar contigo, gracias por intentar ser mejor cada día, gracias por darme los mejores momentos de mi vida, gracias por todo eso, mi niña. Sé que, a pesar de todo lo que pasamos, jamás dejamos de amarnos ni un segundo, y mi amor por ti solo crece.
+
+Espero me permitas formar parte de tu vida (todo lo que resta de ella) y también espero me dejes formar parte de las demás (por toda la eternidad). No sabes lo afortunado que soy al saber que tú eres mi novia, porque eres la niña perfecta. No sabes lo muuucho que tú me gustas. Me encanta todo de ti, en especial esos ojitos tan hermosos; jamás encontraré unos ojitos así, que cuando los vea me hagan sentir tanto.
+
+Te amo, mi niña. De nuevo, Feliz año y 1 mes, mi bonita 🤍`;
+    const textoInicial = document.getElementById('textoInicial');
+    let index = 0;
+    function escribirTexto(){
+        if(index < textoCompleto.length){
+            textoInicial.textContent += textoCompleto.charAt(index);
+            index++;
+            setTimeout(escribirTexto, 20);
+        }
+    }
+    escribirTexto();
+
     const audio = new Audio('https://www.dropbox.com/scl/fi/7frz0i35qhwb5h5ryms3g/dream-girl.mp3?rlkey=itztoyc133vy7xm0c3igmrlh2&st=mc3xut91&dl=1');
 audio.loop = true; // para que se repita
 
+    // Pantallas
     const btnIniciar = document.getElementById('btnIniciar');
     const pantallaInicio = document.getElementById('pantallaInicio');
     const pantallaContador = document.getElementById('pantallaContador');
@@ -188,37 +239,53 @@ audio.loop = true; // para que se repita
         setTimeout(() => {
             pantallaInicio.style.display = 'none';
             pantallaContador.classList.remove('oculta');
-            audio.play().catch(()=>console.log("Autoplay bloqueado, presiona ▶️ para escuchar"));
-            setTimeout(()=>fraseContador.classList.add('mostrar'),500);
-        },1000);
+            setTimeout(() => {
+                fraseContador.classList.add('mostrar');
+            }, 500);
+        }, 1000);
     });
 
+  // Botón de audio: alterna play/pause
     btnAudio.addEventListener('click', () => {
-        if(audio.paused){ audio.play(); btnAudio.textContent='⏸️'; }
-        else{ audio.pause(); btnAudio.textContent='▶️'; }
+        if(audio.paused){
+            audio.play();
+            btnAudio.textContent = '⏸️';
+        } else {
+            audio.pause();
+            btnAudio.textContent = '▶️';
+        }
     });
 
-    window.addEventListener('blur', ()=>{
-        if(!audio.paused){ audio.pause(); btnAudio.textContent='▶️'; }
+    // Pausar música si la pestaña pierde foco
+    window.addEventListener('blur', () => {
+        if(!audio.paused){
+            audio.pause();
+            btnAudio.textContent = '▶️';
+        }
     });
 
+    // Contador
     const inicioRelacion = new Date('2024-06-26T00:00:00');
+
     function actualizarContador(){
-        const ahora=new Date();
-        const diff=ahora-inicioRelacion;
-        const dias=Math.floor(diff/(1000*60*60*24));
-        let restante=diff-dias*24*60*60*1000;
-        const horas=Math.floor(restante/(1000*60*60));
-        restante-=horas*60*60*1000;
-        const minutos=Math.floor(restante/(1000*60));
-        restante-=minutos*60*1000;
-        const segundos=Math.floor(restante/1000);
-        document.getElementById('dias').textContent=String(dias).padStart(2,'0');
-        document.getElementById('horas').textContent=String(horas).padStart(2,'0');
-        document.getElementById('minutos').textContent=String(minutos).padStart(2,'0');
-        document.getElementById('segundos').textContent=String(segundos).padStart(2,'0');
+        const ahora = new Date();
+        const diff = ahora - inicioRelacion;
+
+        const dias = Math.floor(diff / (1000*60*60*24));
+        let restante = diff - dias*24*60*60*1000;
+        const horas = Math.floor(restante / (1000*60*60));
+        restante -= horas*60*60*1000;
+        const minutos = Math.floor(restante / (1000*60));
+        restante -= minutos*60*1000;
+        const segundos = Math.floor(restante / 1000);
+
+        document.getElementById('dias').textContent = String(dias).padStart(2, '0');
+        document.getElementById('horas').textContent = String(horas).padStart(2, '0');
+        document.getElementById('minutos').textContent = String(minutos).padStart(2, '0');
+        document.getElementById('segundos').textContent = String(segundos).padStart(2, '0');
     }
-    setInterval(actualizarContador,1000);
+
+    setInterval(actualizarContador, 1000);
     actualizarContador();
 </script>
 
